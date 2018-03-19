@@ -31,7 +31,7 @@ export function activate(registrar: Registrar) {
 The plugin should supply a `getSpy()` and `getStub()` function,
 or `getReturnSpy()` and `getReturnStub()` function.
 
-The `Spy` is used to record to actions performed,
+The `Spy` is used to record the actions performed,
 while the `Stub` is used to replay the actions recorded.
 
 The `ReturnSpy` and `ReturnStub` is used if the subject that cross the boundary is a return value of some other functions/methods.
