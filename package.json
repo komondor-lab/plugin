@@ -1,7 +1,7 @@
 {
   "name": "komondor-plugin",
   "description": "komondor plugin system",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "main": "dist-es5/index.js",
   "typings": "dist-es5/index.d.ts",
   "files": [
