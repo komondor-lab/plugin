@@ -1,8 +1,8 @@
-import { PluginUtil, Registrar, ReturnAction, SpecContext, createScopedCreateAction, createScopedCreateSatisfier } from '.'
+import { PluginUtil, Registrar, ReturnAction, SpecContext, createScopedCreateAction, createScopedCreateExpectation } from '.'
 
 const TYPE = 'promise'
 const createAction = createScopedCreateAction(TYPE)
-const createSatisfier = createScopedCreateSatisfier(TYPE)
+const createSatisfier = createScopedCreateExpectation(TYPE)
 export const resolvedWith = createSatisfier('resolve')
 export const rejectedWith = createSatisfier('reject')
 

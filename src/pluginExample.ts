@@ -1,12 +1,13 @@
-import { PluginUtil, Registrar, ReturnAction, SpecContext, createScopedCreateAction, createScopedCreateSatisfier } from '.'
+import { PluginUtil, Registrar, ReturnAction, SpecContext, createScopedCreateAction, createScopedCreateExpectation } from '.'
 
 const TYPE = 'jquery'
 const createAction = createScopedCreateAction(TYPE)
-const createSatisfier = createScopedCreateSatisfier(TYPE)
+const createSatisfier = createScopedCreateExpectation(TYPE)
 export const ajaxWith = createSatisfier('ajax')
 
 export function activate(registrar: Registrar) {
   registrar.register(
+    TYPE,
     (context, subject) => isJQuery(subject) ?
       getJQuerySpy(context, registrar.util, subject) :
       undefined,

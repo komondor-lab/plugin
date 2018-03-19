@@ -3,9 +3,14 @@
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][downloads-image]][downloads-url]
 [![Build status][travis-image]][travis-url]
+[![Codecov][codecov-image]][codecov-url]
+[![Coverage Status][coveralls-image]][coveralls-url]
 
-[![Greenkeeper badge][green-keeper-image]][green-keeper-url]
-[![semantic-release][semantic-release-image]][semantic-release-url]
+[![Greenkeeper][greenkeeper-image]][greenkeeper-url]
+[![Semantic Release][semantic-release-image]][semantic-release-url]
+
+[![Visual Studio Code][vscode-image]][vscode-url]
+[![Wallaby.js][wallaby-image]][wallaby-url]
 
 Library to create plugin for [`komondor`](https://github.com/unional/komondor).
 
