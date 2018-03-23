@@ -7,12 +7,19 @@ export const resolvedWith = createSatisfier('resolve')
 export const rejectedWith = createSatisfier('reject')
 
 export function activate(registrar: Registrar) {
-  registrar.registerForReturn(
+  registrar.register(
     TYPE,
-    (context, subject, action) => isPromise(subject) ?
-      getPromiseSpy(context, registrar.util, subject, action) :
-      undefined,
-    (context, action) => getPromiseStub(context, registrar.util, action))
+    {
+      getReturnSpy: (context, subject, action) => {
+        return isPromise(subject) ?
+          getPromiseSpy(context, registrar.util, subject, action) :
+          undefined
+      },
+      getReturnStub: (context, action) => {
+        if (action.meta.returnType !== 'promise') return undefined
+        return getPromiseStub(context, registrar.util, action)
+      }
+    })
 }
 
 function isPromise(result) {

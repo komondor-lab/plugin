@@ -36,14 +36,16 @@ export interface SpecContext extends SpecRecorder, SpecPlayer {
 
 /**
  * Mode of the spec.
- * `passthrough`: making live call without recording.
- * `record`: making live call and record actions to store.
+ * `production`: making live call without recording.
+ * `prod`: alias to `production`
+ * `development`: making live call and record actions to store.
+ * `dev`: alias of `development`
  * `save`: making live call and save recorded actions.
  * `simulate`: replaying saved calls.
  */
-export type SpecMode = 'passthrough' | 'record' | 'save' | 'simulate'
+export type SpecMode = 'development' | 'dev' | 'production' | 'prod' | 'save' | 'simulate'
 
 export type getSpy<T> = (context: SpecContext, subject: T) => T
-export type getStub<T> = (context: SpecContext, subject: T) => T
+export type getStub<T> = (context: SpecContext, subject: T, id: string) => T
 export type getReturnSpy = (context: SpecContext, subject: any, action: ReturnAction) => any
 export type getReturnStub = (context: SpecContext, action: ReturnAction) => any
