@@ -1,4 +1,4 @@
-import { PluginUtil, Registrar, ReturnAction, SpecContext, createScopedCreateAction, createScopedCreateExpectation } from '.'
+import { PluginUtil, Registrar, SpecContext, createScopedCreateAction, createScopedCreateExpectation } from '.'
 
 const TYPE = 'jquery'
 const createAction = createScopedCreateAction(TYPE)
@@ -39,12 +39,14 @@ function getJQuerySpy(context: SpecContext, util: PluginUtil, jquery) {
 }
 
 function getJQueryStub(context: SpecContext, util: PluginUtil, subject, id) {
-  return { ...subject, ajax: (...args) => {
-    context.on('jquery/ajax', a => {
-      if (a.meta.jqueryId === id) {
-        // just an example
-        return a.payload
-      }
-    })
-  }}
+  return {
+    ...subject, ajax: (...args) => {
+      context.on('jquery/ajax', a => {
+        if (a.meta.jqueryId === id) {
+          // just an example
+          return a.payload
+        }
+      })
+    }
+  }
 }
