@@ -1,10 +1,3 @@
-
-export interface SpecExpectation {
-  type: string,
-  payload?: any,
-  meta: { [k: string]: any }
-}
-
 export function createExpectation(type: string, meta: { [k: string]: any } = {}) {
   return payload => ({ type, meta, payload })
 }

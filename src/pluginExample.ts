@@ -1,4 +1,4 @@
-import { PluginUtil, Registrar, ReturnAction, SpecContext, createScopedCreateAction, createScopedCreateExpectation } from '.'
+import { PluginUtil, Registrar, SpecContext, createScopedCreateAction, createScopedCreateExpectation } from '.'
 
 const TYPE = 'jquery'
 const createAction = createScopedCreateAction(TYPE)
@@ -8,12 +8,18 @@ export const ajaxWith = createSatisfier('ajax')
 export function activate(registrar: Registrar) {
   registrar.register(
     TYPE,
-    (context, subject) => isJQuery(subject) ?
-      getJQuerySpy(context, registrar.util, subject) :
-      undefined,
-    (context, action) => action.meta.returnType === TYPE ?
-      getJQueryStub(context, registrar.util, action) :
-      undefined)
+    {
+      getSpy: (context, subject) => {
+        return isJQuery(subject) ?
+          getJQuerySpy(context, registrar.util, subject) :
+          undefined
+      },
+      getStub: (context, subject, id) => {
+        return isJQuery(subject) ?
+          getJQueryStub(context, registrar.util, subject, id) :
+          undefined
+      }
+    })
 }
 
 function isJQuery(result) {
@@ -32,13 +38,15 @@ function getJQuerySpy(context: SpecContext, util: PluginUtil, jquery) {
   return jquery
 }
 
-function getJQueryStub(context: SpecContext, util: PluginUtil, action: ReturnAction) {
-  return new Promise((resolve, reject) => {
-    context.on('jquery/ajax', a => {
-      if (a.meta.jqueryId === action.meta.jqueryId) {
-        // just an example
-        return action.payload
-      }
-    })
-  })
+function getJQueryStub(context: SpecContext, util: PluginUtil, subject, id) {
+  return {
+    ...subject, ajax: (...args) => {
+      context.on('jquery/ajax', a => {
+        if (a.meta.jqueryId === id) {
+          // just an example
+          return a.payload
+        }
+      })
+    }
+  }
 }
