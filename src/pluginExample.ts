@@ -123,7 +123,7 @@ function stubFunction(context: SpecContext, _subject) {
   return function (...args) {
     const inputAction = context.peek()
     if (!inputAction || !inputMatches(inputAction.payload, args)) {
-      throw new SimulationMismatch(context.id, { type: 'fn/invoke', payload: args, meta: {} }, inputAction)
+      throw new SimulationMismatch(context.specId, { type: 'fn/invoke', payload: args, meta: {} }, inputAction)
     }
     currentId = Math.max(currentId, inputAction.meta.functionId)
     context.next()

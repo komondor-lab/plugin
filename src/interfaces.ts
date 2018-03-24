@@ -31,7 +31,7 @@ export interface SpecPlayer {
 
 export interface SpecContext extends SpecRecorder, SpecPlayer {
   mode: SpecMode,
-  id: string,
+  specId: string,
   getSpy: getSpy<any>,
   getStub: (context: SpecContext, action: ReturnAction) => any
 }
