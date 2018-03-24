@@ -5,7 +5,7 @@ export interface SpecRecorder {
    * Add an action to the store.
    * Used by spies.
    */
-  add(action: SpecAction)
+  add(type: string, payload?: any, meta?: object): SpecAction
 }
 
 export interface SpecPlayer {
@@ -21,17 +21,13 @@ export interface SpecPlayer {
    * Prune remaining actions during replay
    */
   prune(): void,
-  /**
-   * Prune remaining actions and replace with specified actions.
-   */
-  graft(...actions: SpecAction[]): void,
-  on(actionType: string, callback: Function),
-  onAny(callback: Function),
+  on(actionType: string, callback: (action: SpecAction) => void),
+  onAny(callback: (action: SpecAction) => void),
 }
 
 export interface SpecContext extends SpecRecorder, SpecPlayer {
   mode: SpecMode,
-  id: string,
+  specId: string,
   getSpy: getSpy<any>,
   getStub: (context: SpecContext, action: ReturnAction) => any
 }
