@@ -10,11 +10,3 @@ export interface ReturnAction {
   payload: any,
   meta: { id: number, returnType?: string, returnId?: number } & { [k: string]: any }
 }
-
-export function createAction(type: string, payload, meta: { [k: string]: any } = {}) {
-  return { type, payload, meta }
-}
-
-export function createScopedCreateAction(scope: string) {
-  return (subType: string, payload, meta: { [k: string]: any } = {}) => ({ type: `${scope}/${subType}`, payload, meta })
-}
