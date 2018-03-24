@@ -1,6 +1,4 @@
-import { Registrar, SpecContext, PluginUtil } from '.'
-
-import { SimulationMismatch } from './errors'
+import { Registrar, SpecContext, SimulationMismatch, PluginUtil } from '.'
 
 export function activate(registrar: Registrar) {
   registrar.register(
