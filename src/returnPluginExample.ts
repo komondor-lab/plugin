@@ -10,12 +10,12 @@ export function activate(registrar: Registrar) {
   registrar.register(
     TYPE,
     {
-      getReturnSpy: (context, subject, action) => {
+      getSpy: (context, subject, action) => {
         return isPromise(subject) ?
           getPromiseSpy(context, registrar.util, subject, action) :
           undefined
       },
-      getReturnStub: (context, action) => {
+      getStub: (context, subject, action) => {
         if (action.meta.returnType !== 'promise') return undefined
         return getPromiseStub(context, registrar.util, action)
       }
@@ -36,7 +36,7 @@ function getPromiseSpy(context: SpecContext, util: PluginUtil, subject, action: 
       const action = createAction('resolve', undefined, { promiseId })
 
       context.add(action)
-      const spied = util.getReturnSpy(context, result, action)
+      const spied = util.getSpy(context, result, action)
       if (spied) {
         return spied
       }
@@ -56,7 +56,7 @@ function getPromiseStub(context: SpecContext, util: PluginUtil, action: ReturnAc
     context.on('promise/resolve', a => {
       if (a.meta.promiseId === action.meta.promiseId) {
         if (a.meta.returnType) {
-          const stub = util.getReturnStub(context, a)
+          const stub = util.getStub(context, a)
           context.next()
           resolve(stub)
         }

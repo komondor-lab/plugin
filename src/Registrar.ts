@@ -1,8 +1,7 @@
-import { getSpy, getStub, getReturnSpy, getReturnStub } from './interfaces'
+import { getSpy, getStub } from './interfaces'
 import { PluginUtil } from './pluginUtil'
 
-export type PluginRecord<T> = { getSpy: getSpy<T>, getStub: getStub<T> } |
-  { getReturnSpy: getReturnSpy, getReturnStub: getReturnStub }
+export type PluginRecord<T> = { getSpy: getSpy<T>, getStub: getStub<T> }
 export interface Registrar {
   /**
    * Register plugin.
