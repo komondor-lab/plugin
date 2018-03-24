@@ -1,5 +1,4 @@
 import { getSpy, getStub } from './interfaces'
-import { PluginUtil } from './pluginUtil'
 
 export interface Registrar {
   /**
@@ -13,8 +12,4 @@ export interface Registrar {
     getSpy: getSpy<T>,
     getStub: getStub<T>
   ): void,
-  /**
-   * Utility for plugin creation.
-   */
-  util: PluginUtil
 }

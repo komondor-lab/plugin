@@ -1,4 +1,4 @@
-import { ReturnAction, SpecAction } from './SpecAction'
+import { SpecAction, ReturnAction } from './SpecAction'
 
 export interface SpecRecorder {
   /**
@@ -31,7 +31,9 @@ export interface SpecPlayer {
 
 export interface SpecContext extends SpecRecorder, SpecPlayer {
   mode: SpecMode,
-  id: string
+  id: string,
+  getSpy: getSpy<any>,
+  getStub: (context: SpecContext, action: ReturnAction) => any
 }
 
 /**
