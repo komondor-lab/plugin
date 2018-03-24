@@ -1,52 +1,169 @@
-import { PluginUtil, Registrar, SpecContext, createScopedCreateAction, createScopedCreateExpectation } from '.'
+import { Registrar, SpecContext, PluginUtil } from '.'
 
-const TYPE = 'jquery'
-const createAction = createScopedCreateAction(TYPE)
-const createSatisfier = createScopedCreateExpectation(TYPE)
-export const ajaxWith = createSatisfier('ajax')
+import { SimulationMismatch } from './errors'
 
 export function activate(registrar: Registrar) {
   registrar.register(
-    TYPE,
-    {
-      getSpy: (context, subject) => {
-        return isJQuery(subject) ?
-          getJQuerySpy(context, registrar.util, subject) :
-          undefined
-      },
-      getStub: (context, subject, id) => {
-        return isJQuery(subject) ?
-          getJQueryStub(context, registrar.util, subject, id) :
-          undefined
-      }
-    })
+    'function',
+    subject => typeof subject === 'function',
+    (context, subject, action) => {
+      return spyFunction(context, registrar.util, subject, action)
+    },
+    (context, subject, _action) => {
+      return stubFunction(context, registrar.util, subject)
+    }
+  )
 }
 
-function isJQuery(result) {
-  // just for demo purpose.
-  // most likely should do a basic shape comparison
-  return result === global['$']
+function spyOnCallback(context: SpecContext, fn, meta) {
+  return (...args) => {
+    context.add({
+      type: 'fn/callback',
+      payload: args,
+      meta
+    })
+    fn(...args)
+  }
 }
 
 let counter = 0
-function getJQuerySpy(context: SpecContext, util: PluginUtil, jquery) {
-  const ajax = jquery.ajax
-  jquery.ajax = (...args) => {
-    context.add(createAction('ajax', args, { jqueryId: ++counter }))
-    return ajax.call(jquery, ...args)
+
+function spyFunction(context: SpecContext, komondor: PluginUtil, subject, action?) {
+  const functionId = ++counter
+  if (action) {
+    action.meta.functionId = functionId
+    action.meta.returnType = 'function'
   }
-  return jquery
+  return function (...args) {
+    context.add({
+      type: 'fn/invoke',
+      payload: args,
+      meta: {
+        functionId
+      }
+    })
+    const spiedArgs = args.map((arg, index) => {
+      if (typeof arg === 'function') {
+        return spyOnCallback(context, arg, { functionId })
+      }
+      if (typeof arg === 'object') {
+        Object.keys(arg).forEach(key => {
+          if (typeof arg[key] === 'function') {
+            arg[key] = spyOnCallback(context, arg[key], {
+              functionId,
+              callbackPath: [index, key]
+            })
+          }
+        })
+      }
+      return arg
+    })
+    let result
+    try {
+      result = subject.apply(this, spiedArgs)
+    }
+    catch (err) {
+      context.add({
+        type: 'fn/throw',
+        payload: err,
+        meta: { functionId }
+      })
+      throw err
+    }
+    const returnAction = { type: 'fn/return', payload: result, meta: { functionId } }
+    context.add(returnAction)
+
+    const out = komondor.getSpy(context, result, returnAction) || result
+    return out
+  }
 }
 
-function getJQueryStub(context: SpecContext, util: PluginUtil, subject, id) {
-  return {
-    ...subject, ajax: (...args) => {
-      context.on('jquery/ajax', a => {
-        if (a.meta.jqueryId === id) {
-          // just an example
-          return a.payload
-        }
+function inputMatches(a, b: any[]) {
+  // istanbul ignore next
+  if (b.length !== a.length)
+    return false
+  let match = true
+  for (let i = 0; i < b.length; i++) {
+    const value = b[i]
+    const valueType = typeof value
+    if (valueType === 'function') continue
+    if (valueType === 'object') {
+      // istanbul ignore next
+      if (typeof a !== 'object') {
+        match = false
+        break
+      }
+
+      const va = a[i]
+      match = !Object.keys(value).some(k => {
+        if (typeof value[k] === 'function') return false
+        return value[k] !== va[k]
       })
+      if (!match)
+        break;
+    }
+    else if (b[i] !== a[i]) {
+      match = false
+      break;
+    }
+  }
+  return match
+}
+
+function locateCallback(meta, args) {
+  if (!meta.callbackPath) {
+    return args.find(arg => typeof arg === 'function')
+  }
+
+  return meta.callbackPath.reduce((p, v) => {
+    return p[v]
+  }, args)
+}
+
+function stubFunction(context: SpecContext, komondor: PluginUtil, _subject) {
+  let currentId = 0
+  return function (...args) {
+    const inputAction = context.peek()
+    if (!inputAction || !inputMatches(inputAction.payload, args)) {
+      throw new SimulationMismatch(context.id, { type: 'fn/invoke', payload: args, meta: {} }, inputAction)
+    }
+    currentId = Math.max(currentId, inputAction.meta.functionId)
+    context.next()
+    const result = processUntilReturn()
+
+    process.nextTick(() => {
+      let action = context.peek()
+      while (action && action.meta.functionId <= currentId) {
+        context.next()
+        if (action.type === 'fn/callback') {
+          const callback = locateCallback(action.meta, args)
+          callback(...action.payload)
+        }
+        action = context.peek()
+      }
+    })
+    return result
+    function processUntilReturn() {
+      const action = context.peek()
+      if (!action) return undefined
+      if (action.meta.functionId > currentId) return undefined
+
+      if (action.type === 'fn/return') {
+        const result = action.meta && komondor.getStub(context, action) || action.payload
+        context.next()
+        return result
+      }
+
+      context.next()
+      if (action.type === 'fn/callback') {
+        const callback = locateCallback(action.meta, args)
+        callback(...action.payload)
+      }
+
+      if (action.type === 'fn/throw') {
+        throw action.payload
+      }
+      return processUntilReturn()
     }
   }
 }
