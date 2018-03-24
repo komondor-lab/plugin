@@ -1,3 +1,4 @@
+export * from './errors'
 export * from './interfaces'
 export * from './pluginUtil'
 export * from './Registrar'

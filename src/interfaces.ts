@@ -42,7 +42,5 @@ export interface SpecContext extends SpecRecorder, SpecPlayer {
  */
 export type SpecMode = 'live' | 'save' | 'simulate'
 
-export type getSpy<T> = (context: SpecContext, subject: T) => T
-export type getStub<T> = (context: SpecContext, subject: T, id: string) => T
-export type getReturnSpy = (context: SpecContext, subject: any, action: ReturnAction) => any
-export type getReturnStub = (context: SpecContext, action: ReturnAction) => any
+export type getSpy<T> = (context: SpecContext, subject: T, action: ReturnAction | undefined) => T
+export type getStub<T> = (context: SpecContext, subject: T, action: ReturnAction | undefined) => T

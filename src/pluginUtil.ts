@@ -1,6 +1,7 @@
-import { getReturnSpy, getReturnStub } from './interfaces'
+import { SpecContext, getSpy } from './interfaces'
+import { ReturnAction } from './SpecAction'
 
 export interface PluginUtil {
-  getReturnSpy: getReturnSpy,
-  getReturnStub: getReturnStub
+  getSpy: getSpy<any>,
+  getStub: (context: SpecContext, action: ReturnAction) => any
 }
