@@ -1,7 +1,14 @@
 import { getSpy, getStub } from './interfaces'
 import { PluginUtil } from './pluginUtil'
 
-export type PluginRecord<T> = { getSpy: getSpy<T>, getStub: getStub<T> }
+export type PluginRecord<T> = {
+  getSpy: getSpy<T>,
+  getStub: getStub<T>,
+  /**
+   * Determine can the plugin support this subject.
+   */
+  support(subject): boolean
+}
 export interface Registrar {
   /**
    * Register plugin.
