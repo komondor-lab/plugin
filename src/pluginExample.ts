@@ -1,14 +1,14 @@
-import { Registrar, SpecContext, SimulationMismatch, PluginUtil } from '.'
+import { Registrar, SpecContext, SimulationMismatch } from '.'
 
 export function activate(registrar: Registrar) {
   registrar.register(
     'function',
     subject => typeof subject === 'function',
     (context, subject, action) => {
-      return spyFunction(context, registrar.util, subject, action)
+      return spyFunction(context, subject, action)
     },
     (context, subject, _action) => {
-      return stubFunction(context, registrar.util, subject)
+      return stubFunction(context, subject)
     }
   )
 }
@@ -26,7 +26,7 @@ function spyOnCallback(context: SpecContext, fn, meta) {
 
 let counter = 0
 
-function spyFunction(context: SpecContext, komondor: PluginUtil, subject, action?) {
+function spyFunction(context: SpecContext, subject, action?) {
   const functionId = ++counter
   if (action) {
     action.meta.functionId = functionId
@@ -71,7 +71,7 @@ function spyFunction(context: SpecContext, komondor: PluginUtil, subject, action
     const returnAction = { type: 'fn/return', payload: result, meta: { functionId } }
     context.add(returnAction)
 
-    const out = komondor.getSpy(context, result, returnAction) || result
+    const out = context.getSpy(context, result, returnAction) || result
     return out
   }
 }
@@ -118,7 +118,7 @@ function locateCallback(meta, args) {
   }, args)
 }
 
-function stubFunction(context: SpecContext, komondor: PluginUtil, _subject) {
+function stubFunction(context: SpecContext, _subject) {
   let currentId = 0
   return function (...args) {
     const inputAction = context.peek()
@@ -147,7 +147,7 @@ function stubFunction(context: SpecContext, komondor: PluginUtil, _subject) {
       if (action.meta.functionId > currentId) return undefined
 
       if (action.type === 'fn/return') {
-        const result = action.meta && komondor.getStub(context, action) || action.payload
+        const result = action.meta && context.getStub(context, action) || action.payload
         context.next()
         return result
       }
