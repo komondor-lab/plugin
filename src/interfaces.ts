@@ -9,6 +9,7 @@ export interface CallOptions {
   [k: string]: any
 }
 export interface SpyCall {
+  invokeId: number
   /**
    * Record that the call is being invoked
    * @param args the args that the call is invoked with
@@ -31,6 +32,7 @@ export interface SpyCall {
 
 export interface SpyContext extends SpecContext {
   mode: SpecMode,
+  instanceId: number,
   /**
    * Create a new call context for recording the call.
    */
@@ -54,6 +56,8 @@ export interface StubCall {
   invoked(args: any[], options?: CallOptions): void
   succeed(options?: CallOptions): boolean
   failed(options?: CallOptions): boolean
+  peek(): SpecAction | undefined,
+  next(): void
   result(): any
   thrown(): any
 }
