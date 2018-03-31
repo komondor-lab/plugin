@@ -12,32 +12,55 @@
 [![Visual Studio Code][vscode-image]][vscode-url]
 [![Wallaby.js][wallaby-image]][wallaby-url]
 
-Library to create plugin for [`komondor`](https://github.com/unional/komondor).
+Library to create plugins for [`komondor`](https://github.com/unional/komondor).
 
 ## Usage
 
-To create plugin, you need to export a `activate()` function as follow:
+To create a plugin, you need to export a `activate()` function as follow:
 
 ```ts
 import { Registrar } from 'komondor-plugin'
 
 export function activate(registrar: Registrar) {
-  registrar.register(...)
+  registrar.register(
+    'function',
+    subject => typeof subject === 'function',
+    (context, subject) => { /* spy implementation */ },
+    (context, subject, action) => { /* stub implementation */ })
 }
 ```
-
-The plugin should supply a `getSpy()` and `getStub()` function,
-or `getReturnSpy()` and `getReturnStub()` function.
 
 The `Spy` is used to record the actions performed,
 while the `Stub` is used to replay the actions recorded.
 
-The `ReturnSpy` and `ReturnStub` is used if the subject that cross the boundary is a return value of some other functions/methods.
-For example `Promise` and `Stream`.
-
-This library also provide some helper functions in `registrat.util` for creating plugins.
-
 ## API
+
+### Registrar.register(name, support, getSpy, getStub)
+
+Register a plugin.
+
+#### name: string
+
+Name of the plugin.
+
+The name should be unique.
+If consumer loads two plugins with the same name, an error will be thrown.
+
+This name should be used as the scope name of your actions.
+For example, if your plugin is `ws`,
+then your action types should be `ws/invoke`, `ws/return`, etc.
+
+#### support: subject => boolean
+
+A predicate to determine if the plugin supports the `subject`.
+
+For example, for the generic `function` plugin,
+the predicate is `subject => typeof subject === 'function'`.
+
+#### getSpy: (context, subject) => spiedSubject
+
+Creates a spied subject.
+
 
 ### createAction(type: string, payload, meta?): SpecAction
 
