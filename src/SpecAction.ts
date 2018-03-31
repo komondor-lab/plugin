@@ -1,12 +1,14 @@
 
 export interface SpecAction {
   type: string,
+  name: string,
   payload: any,
-  meta: { id: number } & { [k: string]: any }
+  meta: { instanceId: number } & { [k: string]: any }
 }
 
 export interface ReturnAction {
   type: string,
+  name: string,
   payload: any,
-  meta: { id: number, returnType?: string, returnId?: number } & { [k: string]: any }
+  meta: { instanceId: number, returnType?: string, returnInstanceId?: number } & { [k: string]: any }
 }

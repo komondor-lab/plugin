@@ -1,14 +1,72 @@
 import { SpecAction, ReturnAction } from './SpecAction'
 
-export interface SpecRecorder {
-  /**
-   * Add an action to the store.
-   * Used by spies.
-   */
-  add(type: string, payload?: any, meta?: object): SpecAction
+export interface SpecContext {
+  specId: string
 }
 
-export interface SpecPlayer {
+export interface CallOptions {
+  name?: string,
+  [k: string]: any
+}
+export interface SpyCall {
+  /**
+   * Record that the call is being invoked
+   * @param args the args that the call is invoked with
+   * @param options.name the name for recording this invoke action. Default to 'invoke'.
+   */
+  invoke<T extends any[]>(args: T, options?: CallOptions): T
+  /**
+   * Record that the call is returning
+   * @param result the return result
+   * @param options.name the name for recording this return action. Default to 'return'.
+   */
+  return<T>(result: T, options?: CallOptions): T
+  /**
+   * Record that the call is throwing
+   * @param err the error to be thrown.
+   * @param options.name the name for recording this throw action. Default to 'throw'.
+   */
+  throw<T>(err: T, options?: CallOptions): T
+}
+
+export interface SpyContext extends SpecContext {
+  mode: SpecMode,
+  /**
+   * Create a new call context for recording the call.
+   */
+  newCall(): SpyCall,
+  addInvokeAction<T extends any[]>(type: string, name: string, args: T, meta?: object): T
+  /**
+   * Add a return action.
+   * The result will be spied if supported.
+   * @param type action type
+   * @param result return result
+   */
+  addReturnAction<T>(type: string, name: string, result: T, meta?: object): T
+  /**
+   * Add an action to the store.
+   */
+  add(type: string, name: string, payload?: any, meta?: object): SpecAction,
+  getSpy<T>(subject: T, key: string | number): T
+}
+
+export interface StubCall {
+  invoked(args: any[], options?: CallOptions): void
+  succeed(options?: CallOptions): boolean
+  failed(options?: CallOptions): boolean
+  result(): any
+  thrown(): any
+}
+export interface StubContext extends SpecContext {
+  /**
+   * instance id of the stub.
+   */
+  instanceId: number,
+  /**
+   * Indicate should the subject be called.
+   */
+  invokeSubject: boolean,
+  newCall(): StubCall,
   /**
    * Move to the next action during replay.
    */
@@ -16,20 +74,10 @@ export interface SpecPlayer {
   /**
    * Peep the current action during replay.
    */
-  peek<A extends SpecAction>(): A | undefined,
-  /**
-   * Prune remaining actions during replay
-   */
-  prune(): void,
-  on(actionType: string, callback: (action: SpecAction) => void),
+  peek(): SpecAction | undefined,
+  on(actionType: string, actionName: string, callback: (action: SpecAction) => void),
   onAny(callback: (action: SpecAction) => void),
-}
-
-export interface SpecContext extends SpecRecorder, SpecPlayer {
-  mode: SpecMode,
-  specId: string,
-  getSpy: getSpy<any>,
-  getStub: (context: SpecContext, action: ReturnAction) => any
+  getStub: (context: StubContext, action: ReturnAction) => any
 }
 
 /**
@@ -40,5 +88,6 @@ export interface SpecContext extends SpecRecorder, SpecPlayer {
  */
 export type SpecMode = 'live' | 'save' | 'simulate'
 
-export type getSpy<T> = (context: SpecContext, subject: T, action: ReturnAction | undefined) => T
-export type getStub<T> = (context: SpecContext, subject: T, action: ReturnAction | undefined) => T
+// TODO: remove action
+export type getSpy<T> = (context: SpyContext, subject: T, action: ReturnAction | undefined) => T
+export type getStub<T> = (context: StubContext, subject: T, action: ReturnAction | undefined) => T
