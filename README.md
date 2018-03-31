@@ -61,23 +61,13 @@ the predicate is `subject => typeof subject === 'function'`.
 
 Creates a spied subject.
 
-
-### createAction(type: string, payload, meta?): SpecAction
-
-A simple helper to create action.
-
-### createScopedCreateAction(actionType): (subType: string, payload, meta?) => SpecAction
-
-Create a scoped `createAction()` for creating sub actions.
-You will most likely to use this function to create a class of actions for a specific plugin.
-
-### createExpectation(type: string, meta?): (payload) => SpecExpectation
+### createExpectation(type: string, name: string): (payload, meta?) => SpecExpectation
 
 `SpecExpectation` is a partial `SpecAction` to be used in a the `spec.satisfy()` call.
 
 Use this function to create helper functions for the user to create their expectations easily.
 
-### createScopedCreateExpectation(type: string): (subType: string, meta?) => (payload) => SpecExpectation
+### createScopedCreateExpectation(scopy: string): (subType: string, name: string) => (payload, meta?) => SpecExpectation
 
 Create a scoped `createExpectation()`.
 
