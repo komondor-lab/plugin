@@ -4,7 +4,8 @@ export interface SpecAction {
   name: string,
   payload: any,
   meta: any,
-  instanceId: number,
+  // instanceId can be skipped for callback action
+  instanceId?: number,
   invokeId?: number,
   sourceType?: string,
   sourceInstanceId?: number,
