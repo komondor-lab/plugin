@@ -1,4 +1,4 @@
-import { SpecAction, ReturnAction } from './SpecAction'
+import { SpecAction } from './SpecAction'
 
 export interface SpecContext {
   specId: string
@@ -81,7 +81,6 @@ export interface StubContext extends SpecContext {
   peek(): SpecAction | undefined,
   on(actionType: string, actionName: string, callback: (action: SpecAction) => void),
   onAny(callback: (action: SpecAction) => void),
-  getStub: (context: StubContext, action: ReturnAction) => any
 }
 
 /**
@@ -93,5 +92,5 @@ export interface StubContext extends SpecContext {
 export type SpecMode = 'live' | 'save' | 'simulate'
 
 // TODO: remove action
-export type getSpy<T> = (context: SpyContext, subject: T, action: ReturnAction | undefined) => T
-export type getStub<T> = (context: StubContext, subject: T, action: ReturnAction | undefined) => T
+export type getSpy<T> = (context: SpyContext, subject: T) => T
+export type getStub<T> = (context: StubContext, subject: T) => T
