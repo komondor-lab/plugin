@@ -3,8 +3,8 @@ export interface SpecAction {
   type: string,
   name: string,
   payload: any,
-  meta: any,
-  // instanceId can be skipped for callback action
+  meta?: { [k: string]: any },
+  // komondor/callback action does not have instanceId
   instanceId?: number,
   invokeId?: number,
   sourceType?: string,
