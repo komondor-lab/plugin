@@ -52,6 +52,7 @@
   "devDependencies": {
     "@types/jest": "^22.2.0",
     "@types/node": "^9.4.7",
+    "assertron": "^4.2.3",
     "dependency-check": "^3.1.0",
     "jest": "^22.4.2",
     "power-assert": "^1.4.4",

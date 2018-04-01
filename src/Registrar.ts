@@ -2,12 +2,12 @@ import { getSpy, getStub } from './interfaces'
 
 export interface Registrar {
   /**
-   * Register plugin
-   * @param name Name of the plugin
-   * @param support Determine can the plugin support this subject
+   * Register a type handler.
+   * @param type The action type handled by the plugin
+   * @param support A predicate function to determine can the plugin support the specified subject
    */
   register<T = any>(
-    name: string,
+    type: string,
     support: (subject) => boolean,
     getSpy: getSpy<T>,
     getStub: getStub<T>
@@ -16,7 +16,7 @@ export interface Registrar {
 
 export interface Plugin<T> {
   type: string,
+  support: (subject) => boolean,
   getSpy: getSpy<T>,
   getStub: getStub<T>,
-  support: (subject) => boolean
 }
