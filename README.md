@@ -71,6 +71,10 @@ Use this function to create helper functions for the user to create their expect
 
 Create a scoped `createExpectation()`.
 
+## Helper
+
+When writing your plugin, you can consider using [`komondor-test`](https://github.com/unional/komondor-test) to help testing your plugin.
+
 ## Contribute
 
 ```sh
