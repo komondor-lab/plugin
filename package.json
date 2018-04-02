@@ -5,8 +5,7 @@
   "main": "dist-es5/index.js",
   "typings": "dist-es5/index.d.ts",
   "files": [
-    "dist-es5",
-    "src"
+    "dist-es5"
   ],
   "scripts": {
     "build": "npm run clean && npm run build-es5",
