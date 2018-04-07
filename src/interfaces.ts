@@ -4,6 +4,19 @@ export interface SpecContext {
   specId: string
 }
 
+export interface SpyContext extends SpecContext {
+  mode: SpecMode,
+  newInstance(): SpyInstance
+}
+
+export interface SpyInstance {
+  instanceId: number,
+  construct(args: any[], meta?: any): void,
+  /**
+   * Create a new call context for recording the call.
+   */
+  newCall(): SpyCall
+}
 export interface SpyCall {
   invokeId: number
   /**
@@ -23,33 +36,8 @@ export interface SpyCall {
   throw<T>(err: T, meta?: { [k: string]: any }): T
 }
 
-export interface SpyContext extends SpecContext {
-  mode: SpecMode,
-  instanceId: number,
-  /**
-   * Create a new call context for recording the call.
-   */
-  newCall(): SpyCall,
-  /**
-   * Add an action to the store.
-   */
-  add(type: string, action: string, payload?: any, meta?: { [k: string]: any }): SpecAction,
-}
-
-export interface StubCall {
-  invoked(args: any[], meta?: { [k: string]: any }): void
-  succeed(meta?: { [k: string]: any }): boolean
-  peek(): SpecAction | undefined,
-  next(): void
-  result(): any
-  thrown(): any
-}
 export interface StubContext extends SpecContext {
-  /**
-   * instance id of the stub.
-   */
-  instanceId: number,
-  newCall(): StubCall,
+  newInstance(): StubInstance
   /**
    * Move to the next action
    */
@@ -58,6 +46,26 @@ export interface StubContext extends SpecContext {
    * Peek the current action
    */
   peek(): SpecAction | undefined
+}
+
+export interface StubInstance {
+  instanceId: number,
+  constructed(args: any[], meta?: any): void,
+  /**
+   * Create a new call context for replaying the call.
+   */
+  newCall(): StubCall
+}
+
+export interface StubCall {
+  invoked(args: any[], meta?: { [k: string]: any }): void
+  wait(): void
+  waitSync(): void
+  succeed(meta?: { [k: string]: any }): boolean
+  peek(): SpecAction | undefined,
+  next(): void
+  result(): any
+  thrown(): any
 }
 
 /**
