@@ -9,8 +9,8 @@ export class SimulationMismatch extends BaseError {
     return !createSatisfier(expected).test(serializeAction(actual))
   }
   // istanbul ignore next
-  constructor(public specId: string, public expectedAction: Partial<SpecAction>, public receivedAction?: Partial<SpecAction>) {
-    super(`Recorded data for '${specId}' doesn't match with simulation. Expecting ${tersify(expectedAction)} but received ${tersify(receivedAction)}`)
+  constructor(public specId: string, public expected: Partial<SpecAction>, public actual?: Partial<SpecAction>) {
+    super(`Recorded data for '${specId}' doesn't match with simulation. Expecting ${tersify(expected)} but received ${tersify(actual)}`)
 
     Object.setPrototypeOf(this, new.target.prototype)
   }

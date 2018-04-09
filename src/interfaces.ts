@@ -10,6 +10,11 @@ export interface SpyContext extends SpecContext {
 }
 
 export interface SpyInstance {
+  /**
+   * Id of the spy instance.
+   * For functions, each subject (different function) should have its own id.
+   * For class, each instance (when instantiating a class) should have its own id.
+   */
   instanceId: number,
   construct(args: any[], meta?: any): void,
   /**
@@ -49,6 +54,11 @@ export interface StubContext extends SpecContext {
 }
 
 export interface StubInstance {
+  /**
+   * Id of the stub instance.
+   * For functions, each subject (different function) should have its own id.
+   * For class, each instance (when instantiating a class) should have its own id.
+   */
   instanceId: number,
   constructed(args: any[], meta?: any): void,
   /**
