@@ -6,7 +6,7 @@ export interface SpecContext {
 
 export interface SpyContext extends SpecContext {
   mode: SpecMode,
-  newInstance(): SpyInstance
+  newInstance(args?: any[], meta?: any): SpyInstance
 }
 
 export interface SpyInstance {
@@ -16,7 +16,6 @@ export interface SpyInstance {
    * For class, each instance (when instantiating a class) should have its own id.
    */
   instanceId: number,
-  construct(args: any[], meta?: any): void,
   /**
    * Create a new call context for recording the call.
    */
@@ -42,7 +41,7 @@ export interface SpyCall {
 }
 
 export interface StubContext extends SpecContext {
-  newInstance(): StubInstance
+  newInstance(args?: any[], meta?: any): StubInstance
   /**
    * Move to the next action
    */
@@ -60,7 +59,6 @@ export interface StubInstance {
    * For class, each instance (when instantiating a class) should have its own id.
    */
   instanceId: number,
-  constructed(args: any[], meta?: any): void,
   /**
    * Create a new call context for replaying the call.
    */
