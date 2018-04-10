@@ -26,3 +26,8 @@ test('serialize function to null', () => {
   const actual = serializeActions([specAction({ payload: [1, x => x] })])
   t.deepEqual(actual[0].payload, [1, null])
 })
+
+test('skip undefined payload', () => {
+  const actual = serializeAction(specAction({ payload: undefined }))
+  t.deepEqual(actual, {})
+})
