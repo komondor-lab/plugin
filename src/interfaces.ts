@@ -4,6 +4,23 @@ export interface SpecContext {
   specId: string
 }
 
+export interface SpyContext extends SpecContext {
+  mode: SpecMode,
+  newInstance(args?: any[], meta?: any): SpyInstance
+}
+
+export interface SpyInstance {
+  /**
+   * Id of the spy instance.
+   * For functions, each subject (different function) should have its own id.
+   * For class, each instance (when instantiating a class) should have its own id.
+   */
+  instanceId: number,
+  /**
+   * Create a new call context for recording the call.
+   */
+  newCall(): SpyCall
+}
 export interface SpyCall {
   invokeId: number
   /**
@@ -23,41 +40,32 @@ export interface SpyCall {
   throw<T>(err: T, meta?: { [k: string]: any }): T
 }
 
-export interface SpyContext extends SpecContext {
-  mode: SpecMode,
+export interface StubContext extends SpecContext {
+  newInstance(args?: any[], meta?: any): StubInstance
+}
+
+export interface StubInstance {
+  /**
+   * Id of the stub instance.
+   * For functions, each subject (different function) should have its own id.
+   * For class, each instance (when instantiating a class) should have its own id.
+   */
   instanceId: number,
   /**
-   * Create a new call context for recording the call.
+   * Create a new call context for replaying the call.
    */
-  newCall(): SpyCall,
-  /**
-   * Add an action to the store.
-   */
-  add(type: string, action: string, payload?: any, meta?: { [k: string]: any }): SpecAction,
+  newCall(): StubCall
 }
 
 export interface StubCall {
+  invokeId: number,
   invoked(args: any[], meta?: { [k: string]: any }): void
+  waitUntilReturn(callback): void
+  blockUntilReturn(): void
+  onAny(callback: (action: SpecAction) => void): void
   succeed(meta?: { [k: string]: any }): boolean
-  peek(): SpecAction | undefined,
-  next(): void
   result(): any
   thrown(): any
-}
-export interface StubContext extends SpecContext {
-  /**
-   * instance id of the stub.
-   */
-  instanceId: number,
-  newCall(): StubCall,
-  /**
-   * Move to the next action
-   */
-  next(): void,
-  /**
-   * Peek the current action
-   */
-  peek(): SpecAction | undefined
 }
 
 /**
