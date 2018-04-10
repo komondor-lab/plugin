@@ -42,14 +42,6 @@ export interface SpyCall {
 
 export interface StubContext extends SpecContext {
   newInstance(args?: any[], meta?: any): StubInstance
-  /**
-   * Move to the next action
-   */
-  next(): void,
-  /**
-   * Peek the current action
-   */
-  peek(): SpecAction | undefined
 }
 
 export interface StubInstance {
@@ -66,12 +58,12 @@ export interface StubInstance {
 }
 
 export interface StubCall {
+  invokeId: number,
   invoked(args: any[], meta?: { [k: string]: any }): void
-  wait(): void
-  waitSync(): void
+  waitUntilReturn(callback): void
+  blockUntilReturn(): void
+  onAny(callback: (action: SpecAction) => void): void
   succeed(meta?: { [k: string]: any }): boolean
-  peek(): SpecAction | undefined,
-  next(): void
   result(): any
   thrown(): any
 }

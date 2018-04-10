@@ -28,7 +28,7 @@ export function serializeAction(action: SpecAction): SpecAction {
       if (action.payload instanceof Error) {
         p[k] = { ...action.payload, message: action.payload.message }
       }
-      else {
+      else if (action.payload !== undefined) {
         p[k] = JSON.parse(JSON.stringify(action.payload))
       }
     }
