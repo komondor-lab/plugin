@@ -19,7 +19,7 @@ export interface SpyInstance {
   /**
    * Create a new call context for recording the call.
    */
-  newCall(): SpyCall
+  newCall(meta?: { [k: string]: any }): SpyCall
 }
 export interface SpyCall {
   invokeId: number
@@ -54,7 +54,7 @@ export interface StubInstance {
   /**
    * Create a new call context for replaying the call.
    */
-  newCall(): StubCall
+  newCall(meta?: { [k: string]: any }): StubCall
 }
 
 export interface StubCall {
