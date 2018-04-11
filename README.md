@@ -47,8 +47,8 @@ The name should be unique.
 If consumer loads two plugins with the same name, an error will be thrown.
 
 This name should be used as the scope name of your actions.
-For example, if your plugin is `ws`,
-then your action types should be `ws/invoke`, `ws/return`, etc.
+For example, if your plugin is `node` which as `childProcess` and `stream`,
+then your action types should be `node/childProcess`, `node/stream`, etc.
 
 #### support: subject => boolean
 
@@ -60,6 +60,10 @@ the predicate is `subject => typeof subject === 'function'`.
 #### getSpy: (context, subject) => spiedSubject
 
 Creates a spied subject.
+
+#### getStub: (context, subject) => stubbedSubject
+
+Creates a stubbed subject.
 
 ### createExpectation(type: string, name: string): (payload, meta?) => SpecExpectation
 
@@ -74,6 +78,9 @@ Create a scoped `createExpectation()`.
 ## Helper
 
 When writing your plugin, you can consider using [`komondor-test`](https://github.com/unional/komondor-test) to help testing your plugin.
+
+When testing your plugin,
+you can use `speced.satisfy([...])` instead of `speced.done()` to ensure the actions are recorded properly.
 
 ## Contribute
 
