@@ -10,6 +10,7 @@ export interface SpecAction {
   sourceInstanceId?: number,
   sourceInvokeId?: number,
   sourcePath?: (string | number)[],
+  autoInvoke?: boolean,
   returnType?: string,
   returnInstanceId?: number
 }
