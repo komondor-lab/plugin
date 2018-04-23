@@ -1,4 +1,3 @@
-
 export interface SpecAction {
   type: string,
   name: string,
@@ -15,7 +14,7 @@ export interface SpecAction {
   returnInstanceId?: number
 }
 
-export interface SpecCallbackAction extends SpecAction {
+export interface SpecActionWithSource extends SpecAction {
   sourceType: string,
   sourceInstanceId: number,
   sourceInvokeId: number,
