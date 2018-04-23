@@ -2,7 +2,8 @@ import { BaseError } from 'make-error'
 import { createSatisfier } from 'satisfier'
 import { tersify } from 'tersify'
 
-import { SpecAction, serializeAction } from '.'
+import { SpecAction } from './interfaces'
+import { serializeAction } from './serializeAction'
 
 export class SimulationMismatch extends BaseError {
   static mismatch(actual: SpecAction, expected: SpecAction) {

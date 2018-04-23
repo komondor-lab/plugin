@@ -1,5 +1,25 @@
-import { SpecAction } from './SpecAction'
+export interface SpecAction {
+  type: string,
+  name: string,
+  payload: any,
+  meta?: any,
+  // komondor/callback action does not have instanceId
+  instanceId?: number,
+  invokeId?: number,
+  sourceType?: string,
+  sourceInstanceId?: number,
+  sourceInvokeId?: number,
+  sourcePath?: (string | number)[],
+  returnType?: string,
+  returnInstanceId?: number
+}
 
+export interface SpecActionWithSource extends SpecAction {
+  sourceType: string,
+  sourceInstanceId: number,
+  sourceInvokeId: number,
+  sourcePath: (string | number)[]
+}
 export interface SpecContext {
   specId: string
 }
