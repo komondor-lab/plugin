@@ -1,8 +1,10 @@
+export type Meta = { [k: string]: any }
+
 export interface SpecAction {
   type: string,
   name: string,
   payload: any,
-  meta?: any,
+  meta?: Meta,
   // komondor/callback action does not have instanceId
   instanceId?: number,
   invokeId?: number,
@@ -10,7 +12,6 @@ export interface SpecAction {
   sourceInstanceId?: number,
   sourceInvokeId?: number,
   sourcePath?: (string | number)[],
-  autoInvoke?: boolean,
   returnType?: string,
   returnInstanceId?: number
 }
@@ -27,7 +28,7 @@ export interface SpecContext {
 
 export interface SpyContext extends SpecContext {
   mode: SpecMode,
-  newInstance(args?: any[], meta?: any): SpyInstance
+  newInstance(args?: any[], meta?: Meta): SpyInstance
 }
 
 export interface SpyInstance {
@@ -40,7 +41,7 @@ export interface SpyInstance {
   /**
    * Create a new call context for recording the call.
    */
-  newCall(meta?: { [k: string]: any }): SpyCall
+  newCall(meta?: Meta): SpyCall
 }
 export interface SpyCall {
   invokeId: number
@@ -48,21 +49,21 @@ export interface SpyCall {
    * Record that the call is being invoked
    * @param args the args that the call is invoked with
    */
-  invoke<T extends any[]>(args: T, meta?: { [k: string]: any }): T
+  invoke<T extends any[]>(args: T, meta?: Meta): T
   /**
    * Record that the call is returning
    * @param result the return result
    */
-  return<T>(result: T, meta?: { [k: string]: any }): T
+  return<T>(result: T, meta?: Meta): T
   /**
    * Record that the call is throwing
    * @param err the error to be thrown.
    */
-  throw<T>(err: T, meta?: { [k: string]: any }): T
+  throw<T>(err: T, meta?: Meta): T
 }
 
 export interface StubContext extends SpecContext {
-  newInstance(args?: any[], meta?: any): StubInstance
+  newInstance(args?: any[], meta?: Meta): StubInstance
 }
 
 export interface StubInstance {
@@ -75,16 +76,16 @@ export interface StubInstance {
   /**
    * Create a new call context for replaying the call.
    */
-  newCall(meta?: { [k: string]: any }): StubCall
+  newCall(meta?: Meta): StubCall
 }
 
 export interface StubCall {
   invokeId: number,
-  invoked(args: any[], meta?: { [k: string]: any }): void
+  invoked(args: any[], meta?: Meta): void
   waitUntilReturn(callback): void
   blockUntilReturn(): void
   onAny(callback: (action: SpecAction) => void): void
-  succeed(meta?: { [k: string]: any }): boolean
+  succeed(meta?: Meta): boolean
   result(): any
   thrown(): any
 }
