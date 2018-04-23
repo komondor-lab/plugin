@@ -1,6 +1,6 @@
 import t from 'assert'
 
-import { serializeAction, serializeActions } from '.'
+import { serializeAction } from './serializeAction'
 import { specAction } from './testUtil'
 import { BaseError } from 'make-error'
 
@@ -23,8 +23,8 @@ test('serialize custom error', () => {
 })
 
 test('serialize function to null', () => {
-  const actual = serializeActions([specAction({ payload: [1, x => x] })])
-  t.deepEqual(actual[0].payload, [1, null])
+  const actual = serializeAction(specAction({ payload: [1, x => x] }))
+  t.deepEqual(actual.payload, [1, null])
 })
 
 test('skip undefined payload', () => {
