@@ -10,7 +10,14 @@ export interface Registrar {
     type: string,
     support: (subject) => boolean,
     getSpy: getSpy<T>,
-    getStub: getStub<T>
+    getStub: getStub<T>,
+    /**
+     * If the subject can be used as input of output,
+     * and it does not serialize well (e.g. Stream),
+     * define this method to serialize the subject,
+     * so that the serialized object is sufficient to pass the `support()` predicate.
+     */
+    serialize?: (subject) => any
   ): void,
 }
 
@@ -19,4 +26,5 @@ export interface Plugin<T> {
   support: (subject) => boolean,
   getSpy: getSpy<T>,
   getStub: getStub<T>,
+  serialize?: (subject) => any
 }
