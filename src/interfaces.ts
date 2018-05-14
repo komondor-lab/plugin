@@ -100,4 +100,4 @@ export type SpecMode = 'live' | 'save' | 'simulate'
 
 // TODO: remove action
 export type getSpy<T> = (context: SpyContext, subject: T) => T
-export type getStub<T> = (context: StubContext, subject: T, action: SpecAction) => T
+export type getStub<T> = (context: StubContext, subject: T, action?: SpecAction) => T
