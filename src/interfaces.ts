@@ -11,7 +11,7 @@ export interface SpecAction {
   sourceType?: string,
   sourceInstanceId?: number,
   sourceInvokeId?: number,
-  sourcePath?: (string | number)[],
+  sourceSite?: (string | number)[],
   returnType?: string,
   returnInstanceId?: number
 }
@@ -20,7 +20,7 @@ export interface SpecActionWithSource extends SpecAction {
   sourceType: string,
   sourceInstanceId: number,
   sourceInvokeId: number,
-  sourcePath: (string | number)[]
+  sourceSite: (string | number)[]
 }
 export interface SpecContext {
   specId: string
