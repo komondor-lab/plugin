@@ -7,15 +7,15 @@ const actualCallbackAction = { type: 'komondor', name: 'callback', payload: { a:
 
 test('SimulationMismatch error', () => {
   const err = new SimulationMismatch('some id', expectedAction, actualCallbackAction)
-  t.equal(err.specId, 'some id')
-  t.equal(err.expected, expectedAction)
-  t.equal(err.actual, actualCallbackAction)
-  t.equal(err.message, `Recorded data for 'some id' doesn't match with simulation. Expecting { type: 'function', name: 'invoke', payload: [0, 'a'] } but received { type: 'komondor', name: 'callback', payload: { a: 1 }, meta: { id: 3 } }`)
+  t.strictEqual(err.specId, 'some id')
+  t.strictEqual(err.expected, expectedAction)
+  t.strictEqual(err.actual, actualCallbackAction)
+  t.strictEqual(err.message, `Recorded data for 'some id' doesn't match with simulation. Expecting { type: 'function', name: 'invoke', payload: [0, 'a'] } but received { type: 'komondor', name: 'callback', payload: { a: 1 }, meta: { id: 3 } }`)
 })
 
 test('SimulationMismatch error, received action optional', () => {
   const err = new SimulationMismatch('some id', expectedAction)
-  t.equal(err.specId, 'some id')
-  t.equal(err.expected, expectedAction)
-  t.equal(err.message, `Recorded data for 'some id' doesn't match with simulation. Expecting { type: 'function', name: 'invoke', payload: [0, 'a'] } but received undefined`)
+  t.strictEqual(err.specId, 'some id')
+  t.strictEqual(err.expected, expectedAction)
+  t.strictEqual(err.message, `Recorded data for 'some id' doesn't match with simulation. Expecting { type: 'function', name: 'invoke', payload: [0, 'a'] } but received undefined`)
 })
