@@ -5,6 +5,10 @@
   },
   "buildOnSave": false,
   "compileOnSave": false,
+  "compilerOptions": {
+    "composite": true,
+    "declarationMap": true
+  },
   "include": [
     "src"
   ]
